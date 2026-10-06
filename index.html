@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Pembelajaran dan Asesmen - SMPN 4 Majenang</title>
+    <!-- V2: +badge status endpoint, +banner peringatan, +kode verifikasi opsional, +pesan error informatif -->
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Custom Font (Inter) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .sidebar-scroll::-webkit-scrollbar { width: 5px; }
+        .sidebar-scroll::-webkit-scrollbar-track { background: #1e3a8a; }
+        .sidebar-scroll::-webkit-scrollbar-thumb { background: #3b82f6; border-radius: 5px; }
+        .fade-in { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900 overflow-hidden">
+
+    <div class="flex h-screen relative">
+        
+        <!-- SIDEBAR -->
+        <aside id="sidebar" class="bg-blue-900 text-white w-80 flex-shrink-0 flex flex-col transition-transform duration-300 absolute inset-y-0 left-0 z-50 md:relative md:translate-x-0 -translate-x-full shadow-xl">
+            <div class="p-6 border-b border-blue-800 flex items-center gap-4">
+                <div class="bg-white p-2 rounded-lg text-blue-900">
+                    <i data-lucide="school" width="28"></i>
+                </div>
+                <div>
+                    <h1 class="font-bold text-lg leading-tight tracking-wide">SMP NEGERI 4<br>MAJENANG</h1>
+                </div>
+                <button onclick="toggleSidebar()" class="md:hidden ml-auto text-blue-300 hover:text-white">
+                    <i data-lucide="x" width="20"></i>
+                </button>
+            </div>
+
+            <nav class="flex-1 overflow-y-auto sidebar-scroll py-4 space-y-1 px-3">
+                <p class="px-3 text-xs font-semibold text-blue-300 uppercase tracking-wider mb-2">Menu Utama</p>
+                
+                <button onclick="handleMenuClick('dashboard')" id="btn-dashboard" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors hover:bg-blue-800 text-blue-100 hover:text-white text-left">
+                    <i data-lucide="layout-dashboard" width="18"></i>
+                    Dashboard
+                </button>
+
+                <div class="my-4 border-t border-blue-800"></div>
+                <p class="px-3 text-xs font-semibold text-blue-300 uppercase tracking-wider mb-2">Jurnal Guru</p>
+
+                <button onclick="handleMenuClick('jurnalGuru')" id="btn-jurnalGuru" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors hover:bg-orange-600 text-blue-100 hover:text-white text-left group">
+                    <i data-lucide="clipboard-list" width="18" class="group-hover:text-white"></i>
+                    Isi Jurnal Guru
+                </button>
+
+                <button onclick="handleMenuClick('lihatJurnalGuru')" id="btn-lihatJurnalGuru" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors hover:bg-pink-600 text-blue-100 hover:text-white text-left group">
+                    <i data-lucide="eye" width="18" class="group-hover:text-white"></i>
+                    Lihat Jurnal Guru
+                </button>
+
+                <button onclick="handleMenuClick('editJurnalGuru')" id="btn-editJurnalGuru" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors hover:bg-red-600 text-blue-100 hover:text-white text-left group">
+                    <i data-lucide="file-pen-line" width="18" class="group-hover:text-white"></i>
+                    Edit Jurnal Guru
+                </button>
+
+                <!-- Administrasi Guru Wali -->
+                <button onclick="handleMenuClick('administrasiWali')" id="btn-administrasiWali" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors hover:bg-amber-600 text-blue-100 hover:text-white text-left group">
+                    <i data-lucide="user-cog" width="18" class="group-hover:text-white"></i>
+                    Administrasi Guru Wali
+                </button>
+
+                <div class="my-2 border-t border-blue-800/50"></div>
+                <p class="px-3 text-xs font-semibold text-blue-300 uppercase tracking-wider mb-2">Jurnal Kelas</p>
+
+                <button onclick="handleMenuClick('jurnalKelas')" id="btn-jurnalKelas" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors hover:bg-purple-600 text-blue-100 hover:text-white text-left group">
+                    <i data-lucide="book-marked" width="18" class="group-hover:text-white"></i>
+                    Isi Jurnal Kelas
+                </button>
+
+                <button onclick="handleMenuClick('lihatJurnalKelas')" id="btn-lihatJurnalKelas" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors hover:bg-indigo-600 text-blue-100 hover:text-white text-left group">
+                    <i data-lucide="file-search" width="18" class="group-hover:text-white"></i>
+                    Lihat Jurnal Kelas
+                </button>
+
+                <button onclick="handleMenuClick('editJurnalKelas')" id="btn-editJurnalKelas" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors hover:bg-fuchsia-600 text-blue-100 hover:text-white text-left group">
+                    <i data-lucide="pencil-ruler" width="18" class="group-hover:text-white"></i>
+                    Edit Jurnal Kelas
+                </button>
+
+                <div class="my-2 border-t border-blue-800/50"></div>
+                <p class="px-3 text-xs font-semibold text-blue-300 uppercase tracking-wider mb-2">Lainnya</p>
+
+                <button onclick="handleMenuClick('checkPresensi')" id="btn-checkPresensi" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors hover:bg-teal-600 text-blue-100 hover:text-white text-left group">
+                    <i data-lucide="user-check" width="18" class="group-hover:text-white"></i>
+                    Presensi Kelas
+                </button>
+
+                <!-- Group WA -->
+                <button onclick="handleMenuClick('groupWA')" id="btn-groupWA" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors hover:bg-emerald-600 text-blue-100 hover:text-white text-left group">
+                    <i data-lucide="message-circle" width="18" class="group-hover:text-white"></i>
+                    Group WA
+                </button>
+
+                <!-- Broadcast WA -->
+                <button onclick="handleMenuClick('broadcastWA')" id="btn-broadcastWA" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors hover:bg-emerald-600 text-blue-100 hover:text-white text-left group">
+                    <i data-lucide="send" width="18" class="group-hover:text-white"></i>
+                    Broadcast WA
+                </button>
+
+                <button onclick="handleMenuClick('input')" id="btn-input" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors hover:bg-green-600 text-blue-100 hover:text-white text-left group">
+                    <i data-lucide="file-input" width="18" class="group-hover:text-white"></i>
+                    Input Nilai
+                </button>
+
+                <button onclick="handleMenuClick('check')" id="btn-check" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors hover:bg-blue-600 text-blue-100 hover:text-white text-left group">
+                    <i data-lucide="table" width="18" class="group-hover:text-white"></i>
+                    Cek Nilai
+                </button>
+
+                <button onclick="handleMenuClick('dataSiswa')" id="btn-dataSiswa" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors hover:bg-cyan-600 text-blue-100 hover:text-white text-left group">
+                    <i data-lucide="graduation-cap" width="18" class="group-hover:text-white"></i>
+                    Data Siswa
+                </button>
+
+                <button onclick="handleMenuClick('asesmen')" id="btn-asesmen" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors hover:bg-rose-600 text-blue-100 hover:text-white text-left group">
+                    <i data-lucide="file-check-2" width="18" class="group-hover:text-white"></i>
+                    Asesmen
+                </button>
+            </nav>
+
+            <div class="p-4 border-t border-blue-800 text-xs text-blue-300">
+                <div class="flex items-center justify-between mb-2">
+                    <span>&copy; <span id="year"></span> SMPN 4 Majenang</span>
+                    <button onclick="window.location.reload()" title="Refresh Data" class="hover:text-white"><i data-lucide="refresh-cw" width="14"></i></button>
+                </div>
+                <p class="opacity-60">Versi 3.1 (Fixed & Stable)</p>
+            </div>
+        </aside>
+
+        <div id="overlay" onclick="toggleSidebar()" class="fixed inset-0 bg-black/50 z-40 hidden md:hidden"></div>
+
+        <!-- MAIN CONTENT -->
+        <div class="flex-1 flex flex-col h-screen overflow-hidden bg-slate-50">
+            <header class="bg-white border-b px-4 py-3 flex items-center justify-between md:hidden shrink-0 shadow-sm z-30">
+                <div class="flex items-center gap-3">
+                    <button onclick="toggleSidebar()" class="text-gray-600 hover:text-blue-900">
+                        <i data-lucide="menu" width="24"></i>
+                    </button>
+                    <span class="font-bold text-gray-800">Sistem Pembelajaran dan Asesmen</span>
+                </div>
+            </header>
+
+            <main id="main-content" class="flex-1 overflow-y-auto p-4 md:p-8 relative">
+                <div class="flex flex-col items-center justify-center h-full text-gray-400">
+                    <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-900 mb-4"></div>
+                    <p>Memuat data sistem...</p>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        const GOOGLE_SHEET_ID = "1TAq2LiT663wxPHwbWBnRN1KbkjBnGMwcU5PgsZWiQpg"; 
+        const WA_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTelgSCLiUWXiCc--AXy2v2D9HxUluRA22CTcyFuj3vC8qZQKYekeBocu3tjPRr9-FLENsThClSinNX/pub?output=csv";
+        // ===== V2: konfigurasi tambahan =====
+        const STATUS_URL = "status_endpoint.json"; // dibuat oleh cek_endpoint_jurnal.py (opsional)
+        const KODE_SHEET_URL = ""; // opsional: URL CSV publik "Nama,Kode" untuk verifikasi guru
+
+        let state = {
+            view: 'dashboard', 
+            actionType: null, 
+            selectedItem: null,
+            searchTerm: '',
+            teachers: [],
+            classes: [],
+            attendanceClasses: [],
+            waGroups: [],
+            loading: true,
+            statusJurnal: {},   // V2: "Jurnal Guru|Nama" -> "hidup" | "mati"
+            statusTanggal: null, // V2: kapan terakhir diperiksa
+            kodeAkses: {}        // V2: nama (lowercase) -> kode verifikasi
+        };
+
+        // KONFIGURASI COLOR PALETTE STATIS UNTUK TAILWIND CDN
+        const COLOR_STYLES = {
+            orange:  { bg: 'bg-orange-600', active: 'bg-orange-600', hoverBg: 'hover:bg-orange-50', hoverBorder: 'hover:border-orange-200', text: 'text-orange-700', iconText: 'text-orange-600', badgeBg: 'bg-orange-100', lightBg: 'bg-orange-50', border: 'border-orange-100', ring: 'focus:ring-orange-500' },
+            pink:    { bg: 'bg-pink-600', active: 'bg-pink-600', hoverBg: 'hover:bg-pink-50', hoverBorder: 'hover:border-pink-200', text: 'text-pink-700', iconText: 'text-pink-600', badgeBg: 'bg-pink-100', lightBg: 'bg-pink-50', border: 'border-pink-100', ring: 'focus:ring-pink-500' },
+            red:     { bg: 'bg-red-600', active: 'bg-red-600', hoverBg: 'hover:bg-red-50', hoverBorder: 'hover:border-red-200', text: 'text-red-700', iconText: 'text-red-600', badgeBg: 'bg-red-100', lightBg: 'bg-red-50', border: 'border-red-100', ring: 'focus:ring-red-500' },
+            amber:   { bg: 'bg-amber-600', active: 'bg-amber-600', hoverBg: 'hover:bg-amber-50', hoverBorder: 'hover:border-amber-200', text: 'text-amber-700', iconText: 'text-amber-600', badgeBg: 'bg-amber-100', lightBg: 'bg-amber-50', border: 'border-amber-100', ring: 'focus:ring-amber-500' },
+            purple:  { bg: 'bg-purple-600', active: 'bg-purple-600', hoverBg: 'hover:bg-purple-50', hoverBorder: 'hover:border-purple-200', text: 'text-purple-700', iconText: 'text-purple-600', badgeBg: 'bg-purple-100', lightBg: 'bg-purple-50', border: 'border-purple-100', ring: 'focus:ring-purple-500' },
+            indigo:  { bg: 'bg-indigo-600', active: 'bg-indigo-600', hoverBg: 'hover:bg-indigo-50', hoverBorder: 'hover:border-indigo-200', text: 'text-indigo-700', iconText: 'text-indigo-600', badgeBg: 'bg-indigo-100', lightBg: 'bg-indigo-50', border: 'border-indigo-100', ring: 'focus:ring-indigo-500' },
+            fuchsia: { bg: 'bg-fuchsia-600', active: 'bg-fuchsia-600', hoverBg: 'hover:bg-fuchsia-50', hoverBorder: 'hover:border-fuchsia-200', text: 'text-fuchsia-700', iconText: 'text-fuchsia-600', badgeBg: 'bg-fuchsia-100', lightBg: 'bg-fuchsia-50', border: 'border-fuchsia-100', ring: 'focus:ring-fuchsia-500' },
+            teal:    { bg: 'bg-teal-600', active: 'bg-teal-600', hoverBg: 'hover:bg-teal-50', hoverBorder: 'hover:border-teal-200', text: 'text-teal-700', iconText: 'text-teal-600', badgeBg: 'bg-teal-100', lightBg: 'bg-teal-50', border: 'border-teal-100', ring: 'focus:ring-teal-500' },
+            emerald: { bg: 'bg-emerald-600', active: 'bg-emerald-600', hoverBg: 'hover:bg-emerald-50', hoverBorder: 'hover:border-emerald-200', text: 'text-emerald-700', iconText: 'text-emerald-600', badgeBg: 'bg-emerald-100', lightBg: 'bg-emerald-50', border: 'border-emerald-100', ring: 'focus:ring-emerald-500' },
+            green:   { bg: 'bg-green-600', active: 'bg-green-600', hoverBg: 'hover:bg-green-50', hoverBorder: 'hover:border-green-200', text: 'text-green-700', iconText: 'text-green-600', badgeBg: 'bg-green-100', lightBg: 'bg-green-50', border: 'border-green-100', ring: 'focus:ring-green-500' },
+            blue:    { bg: 'bg-blue-600', active: 'bg-blue-600', hoverBg: 'hover:bg-blue-50', hoverBorder: 'hover:border-blue-200', text: 'text-blue-700', iconText: 'text-blue-600', badgeBg: 'bg-blue-100', lightBg: 'bg-blue-50', border: 'border-blue-100', ring: 'focus:ring-blue-500' },
+            cyan:    { bg: 'bg-cyan-600', active: 'bg-cyan-600', hoverBg: 'hover:bg-cyan-50', hoverBorder: 'hover:border-cyan-200', text: 'text-cyan-700', iconText: 'text-cyan-600', badgeBg: 'bg-cyan-100', lightBg: 'bg-cyan-50', border: 'border-cyan-100', ring: 'focus:ring-cyan-500' },
+            rose:    { bg: 'bg-rose-600', active: 'bg-rose-600', hoverBg: 'hover:bg-rose-50', hoverBorder: 'hover:border-rose-200', text: 'text-rose-700', iconText: 'text-rose-600', badgeBg: 'bg-rose-100', lightBg: 'bg-rose-50', border: 'border-rose-100', ring: 'focus:ring-rose-500' }
+        };
+
+        // KONFIGURASI MENU (TERMASUK ADMINISTRASI WALI GURU)
+        const MENU_CONFIG = {
+            'jurnalGuru': { title: "Isi Jurnal Guru", color: "orange", key: "linkJurnalGuru", type: 'teacher' },
+            'lihatJurnalGuru': { title: "Lihat Jurnal Guru", color: "pink", key: "linkLihatJurnalGuru", type: 'teacher' },
+            'editJurnalGuru': { title: "Edit Jurnal Guru", color: "red", key: "linkEditJurnalGuru", type: 'teacher' },
+            'administrasiWali': { title: "Administrasi Guru Wali", color: "amber", key: "linkAdministrasiWali", type: 'teacher' },
+            
+            'jurnalKelas': { title: "Isi Jurnal Kelas", color: "purple", key: "linkJurnal", type: 'class' },
+            'lihatJurnalKelas': { title: "Lihat Jurnal Kelas", color: "indigo", key: "linkLihatJurnalKelas", type: 'class' },
+            'editJurnalKelas': { title: "Edit Jurnal Kelas", color: "fuchsia", key: "linkEditJurnalKelas", type: 'class' },
+            
+            'checkPresensi': { title: "Presensi Kelas", color: "teal", key: "linkPresensi", type: 'attendance' },
+            'groupWA': { title: "Group WA", color: "emerald", key: "linkGroupWA", type: 'wa' },
+            'broadcastWA': { title: "Broadcast WA", color: "emerald", key: "linkBroadcastWA", type: 'static' },
+            'dataSiswa': { title: "Data Siswa", color: "cyan", key: "linkDataSiswa", type: 'static' },
+            'asesmen': { title: "Asesmen", color: "rose", key: "linkAsesmen", type: 'static' },
+            'input': { title: "Input Nilai", color: "green", key: "linkInput", type: 'teacher' },
+            'check': { title: "Cek Nilai", color: "blue", key: "linkCek", type: 'teacher' }
+        };
+
+        document.getElementById('year').textContent = new Date().getFullYear();
+        initApp();
+
+        async function initApp() {
+            try {
+                const data = await fetchFromGoogleSheet(GOOGLE_SHEET_ID, WA_SHEET_URL);
+                state.teachers = data.teachers;
+                state.classes = data.classes;
+                state.attendanceClasses = data.attendanceClasses;
+                state.waGroups = data.waGroups;
+                await muatStatusJurnal();            // V2 (opsional, gagal = diabaikan)
+                if (KODE_SHEET_URL) await muatKodeAkses(); // V2 (opsional)
+                state.loading = false;
+                render();
+            } catch (e) {
+                console.error(e);
+                renderError();
+            }
+        }
+
+        // ===== V2: status kesehatan endpoint jurnal =====
+        async function muatStatusJurnal() {
+            try {
+                const r = await fetch(STATUS_URL, { cache: 'no-store' });
+                if (!r.ok) return;
+                const j = await r.json();
+                state.statusJurnal = j.endpoint || {};
+                state.statusTanggal = j.diperiksa || null;
+            } catch (e) { /* file opsional: abaikan bila tidak ada */ }
+        }
+
+        // ===== V2: kode verifikasi guru (CSV publik: kolom Nama,Kode) =====
+        async function muatKodeAkses() {
+            try {
+                const r = await fetch(KODE_SHEET_URL, { cache: 'no-store' });
+                if (!r.ok) return;
+                const rows = parseCSV(await r.text());
+                rows.slice(1).forEach(row => {
+                    const nama = (row[0] || '').trim();
+                    const kode = (row[1] || '').trim();
+                    if (nama && kode) state.kodeAkses[nama.toLowerCase()] = kode;
+                });
+            } catch (e) { /* opsional: abaikan */ }
+        }
+
+        // ===== V2: status 'hidup' | 'mati' | null untuk item jurnal =====
+        function statusItem(jenis, nama) {
+            const s = state.statusJurnal[jenis + '|' + nama];
+            return s === 'hidup' ? 'hidup' : (s === 'mati' ? 'mati' : null);
+        }
+
+        // ===== V2: banner peringatan di dashboard =====
+        function bannerStatus() {
+            const mati = Object.entries(state.statusJurnal).filter(([k, v]) => v === 'mati');
+            if (!mati.length) return '';
+            const nama = mati.map(([k]) => k.split('|')[1]).join(', ');
+            const tgl = state.statusTanggal ? ` (data per ${state.statusTanggal})` : '';
+            return `
+                <div class="mb-6 bg-red-50 border-l-4 border-red-500 rounded-r-xl px-5 py-4 shadow-sm">
+                    <div class="flex items-start gap-3">
+                        <i data-lucide="alert-triangle" width="22" class="text-red-600 shrink-0 mt-0.5"></i>
+                        <div>
+                            <p class="font-bold text-red-800 text-sm">&#9888;&#65039; ${mati.length} form jurnal terpantau bermasalah${tgl}</p>
+                            <p class="text-red-700 text-xs mt-1">${nama} &mdash; bila gagal mengirim jurnal, segera hubungi admin untuk redeploy.</p>
+                        </div>
+                    </div>
+                </div>`;
+        }
+
+        // ===== V2: badge status pada kartu guru/kelas =====
+        function badgeStatus(item) {
+            let jenis = null;
+            if (state.actionType === 'jurnalGuru') jenis = 'Jurnal Guru';
+            else if (state.actionType === 'jurnalKelas') jenis = 'Jurnal Kelas';
+            if (!jenis) return '';
+            const s = statusItem(jenis, item.name);
+            if (s === 'hidup') return `<span class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded border border-green-200" title="Server jurnal terpantau normal">&#128994; Normal</span>`;
+            if (s === 'mati') return `<span class="text-xs bg-red-100 text-red-700 px-2 py-1 rounded border border-red-200" title="Server jurnal bermasalah &mdash; hubungi admin">&#128308; Bermasalah</span>`;
+            return '';
+        }
+
+        // ===== V2: strip peringatan di tampilan form =====
+        function stripStatus() {
+            let jenis = null;
+            if (state.actionType === 'jurnalGuru') jenis = 'Jurnal Guru';
+            else if (state.actionType === 'jurnalKelas') jenis = 'Jurnal Kelas';
+            if (!jenis || !state.selectedItem) return '';
+            if (statusItem(jenis, state.selectedItem.name) !== 'mati') return '';
+            return `<div class="bg-red-600 text-white text-xs px-4 py-2 text-center font-medium">&#9888;&#65039; Server jurnal ini terpantau bermasalah. Bila muncul "Gagal Mengirim", jangan mengulang terus &mdash; hubungi admin.</div>`;
+        }
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            const isClosed = sidebar.classList.contains('-translate-x-full');
+            if (isClosed) {
+                sidebar.classList.remove('-translate-x-full');
+                overlay.classList.remove('hidden');
+            } else {
+                sidebar.classList.add('-translate-x-full');
+                overlay.classList.add('hidden');
+            }
+        }
+
+        function handleMenuClick(type) {
+            document.getElementById('sidebar').classList.add('-translate-x-full');
+            document.getElementById('overlay').classList.add('hidden');
+            state.searchTerm = ''; 
+            
+            if (type === 'dashboard') {
+                state.view = 'dashboard';
+                state.actionType = null;
+            } else if (type === 'input') {
+                const globalLink = state.teachers.length > 0 ? state.teachers[0].linkInput : "#";
+                state.actionType = 'input';
+                state.selectedItem = { name: "Input Nilai (Semua)", linkInput: globalLink };
+                state.view = 'action';
+            } else if (type === 'dataSiswa') {
+                state.actionType = 'dataSiswa';
+                state.selectedItem = { 
+                    name: "Data Murid SMPN 4 Majenang", 
+                    linkDataSiswa: "https://smpn4majenang.github.io/data-murid-smpn4-majenang/" 
+                };
+                state.view = 'action';
+            } else if (type === 'asesmen') {
+                state.actionType = 'asesmen';
+                state.selectedItem = { 
+                    name: "Administrasi Asesmen", 
+                    linkAsesmen: "https://smpn4majenang.github.io/adm-asesmen/" 
+                };
+                state.view = 'action';
+            } else if (type === 'broadcastWA') {
+                state.actionType = 'broadcastWA';
+                state.selectedItem = { 
+                    name: "Broadcast WA", 
+                    linkBroadcastWA: "https://wartam-mjng.github.io/broadcast-WA/" 
+                };
+                state.view = 'action';
+            } else {
+                state.actionType = type;
+                state.view = 'list';
+            }
+            render();
+        }
+
+        function handleBackToList() {
+            if(state.actionType === 'input' || state.actionType === 'dataSiswa' || state.actionType === 'asesmen' || state.actionType === 'broadcastWA') {
+                state.view = 'dashboard';
+                state.actionType = null;
+            } else {
+                state.view = 'list';
+                state.selectedItem = null;
+            }
+            render();
+        }
+
+        function handleItemClickById(itemId) {
+            let item = null;
+            const config = MENU_CONFIG[state.actionType];
+            
+            if (config.type === 'class') item = state.classes.find(c => c.id === itemId);
+            else if (config.type === 'attendance') item = state.attendanceClasses.find(a => a.id === itemId);
+            else if (config.type === 'wa') item = state.waGroups.find(w => w.id === itemId);
+            else item = state.teachers.find(t => t.id === itemId);
+
+            if (item) {
+                // ===== V2: kode verifikasi (hanya bila terdaftar untuk nama ini) =====
+                if (state.actionType === 'jurnalGuru' || state.actionType === 'jurnalKelas') {
+                    const kode = state.kodeAkses[(item.name || '').toLowerCase()];
+                    if (kode) {
+                        const isi = prompt(`Masukkan kode verifikasi untuk "${item.name}":`);
+                        if (isi === null) return; // pengguna batal
+                        if (isi.trim() !== kode) { alert('Kode salah. Akses ditolak.'); return; }
+                    }
+                }
+                state.selectedItem = item;
+                state.view = 'action';
+                render();
+            }
+        }
+
+        function render() {
+            // Reset Sidebar Styling
+            document.querySelectorAll('nav button').forEach(btn => {
+                btn.className = "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors hover:bg-blue-800 text-blue-100 hover:text-white text-left group";
+            });
+
+            if (state.view === 'dashboard') {
+                const dashBtn = document.getElementById('btn-dashboard');
+                if(dashBtn) dashBtn.className = "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors bg-blue-800 text-white text-left";
+                document.getElementById('main-content').innerHTML = renderDashboard();
+            } else {
+                const btnId = 'btn-' + state.actionType;
+                const btn = document.getElementById(btnId);
+                const config = MENU_CONFIG[state.actionType];
+                
+                if (btn && config && COLOR_STYLES[config.color]) {
+                    btn.className = `w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors text-white shadow-md ${COLOR_STYLES[config.color].bg} text-left group`;
+                }
+                
+                if (state.view === 'list') {
+                    document.getElementById('main-content').innerHTML = renderList();
+                } else if (state.view === 'action') {
+                    document.getElementById('main-content').innerHTML = renderAction();
+                }
+            }
+            setTimeout(() => { if (window.lucide) lucide.createIcons(); }, 50);
+        }
+
+        function renderDashboard() {
+            return `
+                <div class="max-w-6xl mx-auto fade-in">
+                    <div class="mb-8">
+                        <h2 class="text-2xl font-bold text-gray-800">Selamat Datang 👋</h2>
+                        <p class="text-gray-500">Sistem Informasi Pembelajaran dan Asesmen SMP Negeri 4 Majenang</p>
+                    </div>
+                    ${bannerStatus()}
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+                        <h3 class="font-bold text-gray-800 mb-4">Akses Cepat</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            ${renderDashboardButton('jurnalGuru', 'Isi', 'orange', 'Jurnal Guru', 'Agenda harian')}
+                            ${renderDashboardButton('lihatJurnalGuru', 'Lihat', 'pink', 'Lihat Jurnal Guru', 'Monitoring')}
+                            ${renderDashboardButton('editJurnalGuru', 'Edit', 'red', 'Edit Jurnal Guru', 'Koreksi data')}
+                            ${renderDashboardButton('administrasiWali', 'Wali', 'amber', 'Administrasi Guru Wali', 'Kelola wali kelas')}
+                            
+                            ${renderDashboardButton('jurnalKelas', 'Isi', 'purple', 'Isi Jurnal Kelas', 'Agenda kelas')}
+                            ${renderDashboardButton('lihatJurnalKelas', 'Lihat', 'indigo', 'Lihat Jurnal Kelas', 'Monitoring')}
+                            ${renderDashboardButton('editJurnalKelas', 'Edit', 'fuchsia', 'Edit Jurnal Kelas', 'Koreksi agenda')}
+                            
+                            ${renderDashboardButton('checkPresensi', 'Presensi', 'teal', 'Presensi Kelas', 'Data kehadiran')}
+                            ${renderDashboardButton('groupWA', 'WA', 'emerald', 'Group WA', 'Komunikasi kelas')}
+                            ${renderDashboardButton('broadcastWA', 'Pesan', 'emerald', 'Broadcast WA', 'Kirim pesan massal')}
+                            ${renderDashboardButton('input', 'Nilai', 'green', 'Input Nilai', 'Form input')}
+                            ${renderDashboardButton('check', 'Siswa', 'blue', 'Cek Nilai', 'Daftar nilai')}
+                            ${renderDashboardButton('dataSiswa', 'Data', 'cyan', 'Data Siswa', 'Database murid')}
+                            ${renderDashboardButton('asesmen', 'Ujian', 'rose', 'Asesmen', 'Administrasi ujian')}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderDashboardButton(id, badge, color, title, desc) {
+            let icon = 'circle';
+            if(id.includes('jurnalGuru')) icon = 'clipboard-list';
+            if(id.includes('lihat')) icon = id.includes('Kelas') ? 'file-search' : 'eye';
+            if(id.includes('edit')) icon = id.includes('Kelas') ? 'pencil-ruler' : 'file-pen-line';
+            if(id.includes('jurnalKelas') && !id.includes('lihat') && !id.includes('edit')) icon = 'book-marked';
+            if(id === 'administrasiWali') icon = 'user-cog';
+            if(id === 'checkPresensi') icon = 'user-check';
+            if(id === 'groupWA') icon = 'message-circle';
+            if(id === 'broadcastWA') icon = 'send';
+            if(id === 'dataSiswa') icon = 'graduation-cap';
+            if(id === 'asesmen') icon = 'file-check-2';
+            if(id === 'input') icon = 'file-input';
+            if(id === 'check') icon = 'table';
+
+            const cs = COLOR_STYLES[color] || COLOR_STYLES.blue;
+
+            return `
+            <button onclick="handleMenuClick('${id}')" class="p-4 border rounded-xl ${cs.hoverBg} ${cs.hoverBorder} transition-all text-left group">
+                <div class="flex justify-between items-start mb-2">
+                    <i data-lucide="${icon}" width="24" class="text-gray-400 group-hover:${cs.iconText}"></i>
+                    <span class="text-xs font-bold bg-gray-100 text-gray-600 px-2 py-0.5 rounded group-hover:${cs.badgeBg} group-hover:${cs.text}">${badge}</span>
+                </div>
+                <span class="font-bold text-sm block">${title}</span>
+                <span class="text-xs text-gray-400">${desc}</span>
+            </button>`;
+        }
+
+        function renderList() {
+            const config = MENU_CONFIG[state.actionType];
+            const cs = COLOR_STYLES[config.color] || COLOR_STYLES.blue;
+            let dataSource = [];
+            let isTeacher = false;
+
+            if(config.type === 'class') dataSource = state.classes;
+            else if(config.type === 'attendance') dataSource = state.attendanceClasses;
+            else if(config.type === 'wa') dataSource = state.waGroups;
+            else { dataSource = state.teachers; isTeacher = true; }
+
+            const filtered = dataSource.filter(item => 
+                (item.name && item.name.toLowerCase().includes(state.searchTerm.toLowerCase())) || 
+                (item.subject && item.subject.toLowerCase().includes(state.searchTerm.toLowerCase()))
+            );
+
+            let listHtml = filtered.length > 0 ? filtered.map(item => {
+                let subHtml = '';
+                if(config.type === 'class' || config.type === 'attendance' || config.type === 'wa') {
+                    let badgeLabel = "Link";
+                    if(state.actionType.includes('lihat')) badgeLabel = "Rekap";
+                    if(state.actionType.includes('edit')) badgeLabel = "Edit";
+                    if(config.type === 'wa') badgeLabel = "Join Link";
+                    subHtml = `<span class="text-xs ${cs.lightBg} ${cs.text} px-2 py-1 rounded border ${cs.border}">${badgeLabel}</span>`;
+                } else {
+                    const subjects = (item.subject || "").split(',').map(s => s.trim()).filter(s => s);
+                    subHtml = subjects.map(s => 
+                        `<span class="text-xs bg-slate-100 text-slate-600 px-2 py-1 rounded border border-slate-200 truncate max-w-[150px] inline-block">${s}</span>`
+                    ).join('');
+                }
+                
+                let iconUser = 'users';
+                if(isTeacher) iconUser = 'user';
+                if(config.type === 'attendance') iconUser = 'calendar-check';
+                if(config.type === 'wa') iconUser = 'message-circle';
+
+                return `
+                <button onclick="handleItemClickById('${item.id}')"
+                    class="flex flex-col sm:flex-row sm:items-center gap-3 p-4 bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md ${cs.hoverBorder} transition-all text-left group">
+                    <div class="flex items-center gap-3 flex-1 min-w-0">
+                        <div class="h-10 w-10 rounded-full ${cs.lightBg} ${cs.iconText} flex items-center justify-center shrink-0">
+                            <i data-lucide="${iconUser}" width="20"></i>
+                        </div>
+                        <div class="min-w-0">
+                            <h4 class="font-bold text-gray-900 truncate">${item.name}</h4>
+                            <div class="flex flex-wrap gap-1 mt-1">${subHtml}${badgeStatus(item)}</div>
+                        </div>
+                    </div>
+                    <div class="hidden sm:block"><i data-lucide="chevron-right" width="20" class="text-gray-300 group-hover:${cs.iconText}"></i></div>
+                </button>`;
+            }).join('') : `<div class="text-center py-12 text-gray-400 bg-white rounded-xl border border-dashed border-gray-200 col-span-full"><p>Data tidak ditemukan.</p></div>`;
+
+            return `
+                <div class="max-w-5xl mx-auto fade-in h-full flex flex-col">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+                        <div>
+                            <h2 class="text-2xl font-bold text-gray-800">${config.title}</h2>
+                            <p class="text-gray-500 text-sm">Pilih data dari daftar di bawah ini.</p>
+                        </div>
+                    </div>
+                    <div class="relative mb-6">
+                        <input type="text" oninput="state.searchTerm = this.value; render()" value="${state.searchTerm}" 
+                            placeholder="${isTeacher ? 'Cari nama guru...' : 'Cari nama kelas/grup...'}"
+                            class="w-full pl-11 pr-4 py-3 rounded-xl border border-gray-200 shadow-sm ${cs.ring} outline-none transition-all">
+                        <i data-lucide="search" width="20" class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                    </div>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-3 pb-8">${listHtml}</div>
+                </div>`;
+        }
+
+        function renderAction() {
+            const item = state.selectedItem || {};
+            const config = MENU_CONFIG[state.actionType] || {};
+            const cs = COLOR_STYLES[config.color] || COLOR_STYLES.blue;
+            
+            let link = item[config.key] || "#";
+            const isInvalid = !link || link === '#' || link.length < 5;
+
+            let iframeNotice = `<span>Jika kosong, klik tombol <strong>"Buka Tab Baru"</strong> di pojok kanan.</span>`;
+            if (state.actionType === 'groupWA') {
+                iframeNotice = `<span>Link WhatsApp tidak dapat dibuka di dalam frame. Silakan klik <strong>"Buka Tab Baru"</strong>.</span>`;
+            }
+
+            return `
+                <div class="flex flex-col h-full bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden fade-in">
+                    <div class="border-b px-4 py-3 flex items-center justify-between bg-gray-50">
+                        <div class="flex items-center gap-3 overflow-hidden">
+                            <button onclick="handleBackToList()" class="p-1.5 hover:bg-gray-200 rounded-lg text-gray-600 transition-colors" title="Kembali">
+                                <i data-lucide="arrow-left" width="20"></i>
+                            </button>
+                            <div class="border-l border-gray-300 pl-3">
+                                <div class="flex flex-col">
+                                    <h3 class="font-bold text-gray-800 text-sm md:text-base truncate max-w-[300px]">${item.name || 'Detail'}</h3>
+                                    <span class="text-xs ${cs.text} font-medium uppercase tracking-wide">${config.title || ''}</span>
+                                </div>
+                            </div>
+                        </div>
+                        ${!isInvalid ? `<a href="${link}" target="_blank" class="flex items-center gap-2 text-xs font-medium px-3 py-1.5 rounded-lg bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 transition-colors"><span class="hidden sm:inline">Buka Tab Baru</span><i data-lucide="external-link" width="14"></i></a>` : ''}
+                    </div>
+                    ${stripStatus()}
+                    <div class="flex-1 relative bg-gray-100">
+                        ${isInvalid ? `<div class="absolute inset-0 flex flex-col items-center justify-center p-8 text-center"><div class="bg-white p-6 rounded-xl shadow-lg max-w-sm"><h3 class="font-bold text-gray-800">Link Tidak Tersedia</h3><p class="text-sm text-gray-500 mt-1">Link tautan belum diatur pada Google Sheet.</p></div></div>` : 
+                        `<div class="absolute top-0 left-0 w-full bg-yellow-50 px-3 py-1.5 text-[10px] text-yellow-800 flex justify-center gap-2 border-b border-yellow-100 z-10">${iframeNotice}</div><iframe src="${link}" class="w-full h-full border-none pt-6"></iframe>`}
+                    </div>
+                </div>`;
+        }
+
+        async function fetchFromGoogleSheet(idMain, urlWa) {
+            const urlMain = `https://docs.google.com/spreadsheets/d/${idMain}/gviz/tq?tqx=out:csv`;
+            
+            const [resMain, resWa] = await Promise.all([
+                fetch(urlMain),
+                fetch(urlWa)
+            ]);
+
+            if (!resMain.ok) throw new Error("Gagal mengambil data dari Google Sheet Utama");
+
+            const textMain = await resMain.text();
+            let textWa = "";
+            if (resWa.ok) {
+                textWa = await resWa.text();
+            }
+            
+            const rows = parseCSV(textMain);
+            const rowsWa = textWa ? parseCSV(textWa) : [];
+
+            // Membaca Guru (Kolom A-G / Index 0-6) + Kolom H (Index 7) untuk Administrasi Wali
+            const loadedTeachers = rows.slice(1).map((row, index) => ({
+                id: `t-${index}`, 
+                name: row[0] || "", 
+                subject: row[1] || "", 
+                linkInput: row[2] || "#", 
+                linkCek: row[3] || "#", 
+                linkJurnalGuru: row[4] || "#", 
+                linkLihatJurnalGuru: row[5] || "#", 
+                linkEditJurnalGuru: row[6] || "#",
+                linkAdministrasiWali: row[7] || "#"
+            })).filter(t => t.name !== "" && t.name.toLowerCase() !== "nama guru");
+
+            // Membaca Jurnal Kelas (Kolom I-L / Index 8-11)
+            const loadedClasses = rows.slice(1).map((row, index) => ({
+                id: `c-${index}`, 
+                name: row[8] || "", 
+                linkJurnal: row[9] || "#", 
+                linkLihatJurnalKelas: row[10] || "#", 
+                linkEditJurnalKelas: row[11] || "#"
+            })).filter(c => c.name !== "" && c.name.toLowerCase() !== "nama kelas");
+
+            // Membaca Presensi Kelas (Kolom N-O / Index 13-14)
+            const loadedAttendance = rows.slice(1).map((row, index) => ({
+                id: `p-${index}`, 
+                name: row[13] || "", 
+                linkPresensi: row[14] || "#"
+            })).filter(a => a.name !== "" && a.name.toLowerCase() !== "nama kelas");
+
+            // Membaca khusus Group WA dari Sheet Publik WA (Nama: Index 13 / Kolom N, Link: Index 15 / Kolom P)
+            const loadedWa = rowsWa.length > 1 ? rowsWa.slice(1).map((row, index) => ({
+                id: `w-${index}`, 
+                name: row[13] || `Grup ${index + 1}`, 
+                linkGroupWA: row[15] || "#", 
+                type: 'wa'
+            })).filter(w => w.linkGroupWA !== "" && w.linkGroupWA !== "#" && w.name.toLowerCase() !== "nama kelas") : [];
+
+            return { teachers: loadedTeachers, classes: loadedClasses, attendanceClasses: loadedAttendance, waGroups: loadedWa };
+        }
+
+        function parseCSV(text) {
+            const rows = []; let currentRow = []; let currentCell = ""; let insideQuotes = false;
+            for (let i = 0; i < text.length; i++) {
+                const char = text[i];
+                if (char === '"') insideQuotes = !insideQuotes;
+                else if (char === ',' && !insideQuotes) { currentRow.push(currentCell.trim()); currentCell = ""; }
+                else if (char === '\n' && !insideQuotes) { currentRow.push(currentCell.trim()); rows.push(currentRow); currentRow = []; currentCell = ""; }
+                else currentCell += char;
+            }
+            if (currentCell) currentRow.push(currentCell.trim());
+            if (currentRow.length > 0) rows.push(currentRow);
+            return rows;
+        }
+        
+        function renderError() {
+            document.getElementById('main-content').innerHTML = `
+                <div class="flex flex-col items-center justify-center h-full p-8 text-center max-w-md mx-auto">
+                    <div class="bg-red-50 text-red-600 p-4 rounded-full mb-4">
+                        <i data-lucide="alert-triangle" width="32"></i>
+                    </div>
+                    <h3 class="font-bold text-gray-800 text-lg mb-2">Data Tidak Dapat Dimuat</h3>
+                    <div class="text-sm text-gray-500 mb-6 text-left bg-gray-50 rounded-xl p-4 border border-gray-200">
+                        <p class="font-semibold text-gray-700 mb-2">Kemungkinan penyebab:</p>
+                        <ul class="list-disc ml-5 space-y-1">
+                            <li>Koneksi internet terputus atau tidak stabil.</li>
+                            <li>Spreadsheet konfigurasi belum di-Publish ke Web.</li>
+                            <li>Jaringan sekolah memblokir akses ke Google.</li>
+                        </ul>
+                        <p class="mt-3">Coba lagi beberapa saat. Bila tetap gagal, hubungi admin.</p>
+                    </div>
+                    <button onclick="window.location.reload()" class="px-5 py-2.5 bg-blue-900 hover:bg-blue-800 text-white font-medium text-sm rounded-lg shadow-sm transition-colors">Coba Lagi</button>
+                </div>`;
+            setTimeout(() => { if (window.lucide) lucide.createIcons(); }, 50);
+        }
+    </script>
+</body>
+</html>
